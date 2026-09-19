@@ -1,0 +1,11 @@
+This login page is the front door of Secure Notes. It is the first screen a user sees, and its job is to make sure only a signed-in person can open their notes.
+
+Secure Notes is meant to be a private notes app: each user should have their own notes, and other people should not be able to read them. Login is how the app checks “who are you?” before showing anything sensitive.
+
+On this page, a returning user:
+
+1. Enters their username
+2. Enters their password
+3. Clicks Sign in
+That is the authentication step. Sign in sends username and password to POST /api/auth/login. The backend looks up the user in PostgreSQL and checks the password hash. On success, the app stores the signed-in user for this tab and forwards them to /notes. If they do not have an account yet, Sign up sends them to /signup to create one.
+

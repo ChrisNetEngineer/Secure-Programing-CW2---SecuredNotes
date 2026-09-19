@@ -1,0 +1,12 @@
+This signup page is where a new user creates a Secure Notes account. It is reached from the login page via Sign up, at the /signup route.
+
+Secure Notes is a private notes app: each person needs their own account before they can store notes that belong only to them. Signup is how the app records “this is a new user.”
+
+On this page, a new user:
+
+1. Chooses a username
+2. Creates a password
+3. Re-enters the password to confirm it
+4. Clicks Create account
+
+That is the registration step. Create account sends username and password to POST /api/auth/signup. The backend stores the username and a hashed password in PostgreSQL. Confirm password is checked in the form so the two passwords match before the request is sent. After a successful signup, the user is sent to / so they can sign in. If they already have an account, Sign in sends them to / to log in.
