@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { api } from "../api";
 import { getLoggedInUser } from "../authSession";
 import "./Login.css";
 
@@ -29,11 +30,8 @@ function Signup() {
     setSubmitting(true);
 
     try {
-      const response = await fetch("/api/auth/signup", {
+      const response = await api("/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ username, password }),
       });
 

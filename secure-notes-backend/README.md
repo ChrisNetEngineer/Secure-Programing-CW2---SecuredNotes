@@ -44,11 +44,23 @@ Content-Type: application/json
 }
 ```
 
-Login succeeds only after a matching user exists in PostgreSQL.
+Login succeeds only after a matching user exists in PostgreSQL. A successful login sets an httpOnly JWT cookie.
+
+Check the current session:
+
+```http
+GET http://localhost:3000/api/auth/me
+```
+
+Sign out:
+
+```http
+POST http://localhost:3000/api/auth/logout
+```
 
 ## Frontend contract
 
-`Login.jsx` already collects `username` and `password`. When you connect it later, send those fields to `POST /api/auth/login` as JSON. A successful response looks like:
+`Login.jsx` sends `username` and `password` to `POST /api/auth/login` with credentials included. A successful response looks like:
 
 ```json
 {
@@ -58,3 +70,5 @@ Login succeeds only after a matching user exists in PostgreSQL.
   }
 }
 ```
+
+The JWT itself is stored in the `sn_token` cookie, not in the JSON body.

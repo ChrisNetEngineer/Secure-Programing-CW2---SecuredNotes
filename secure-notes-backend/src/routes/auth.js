@@ -2,6 +2,12 @@ import { Router } from "express";
 import rateLimit from "express-rate-limit";
 import { createUser, findUserByUsername } from "../db.js";
 import { hashPassword, passwordsMatch } from "../lib/passwords.js";
+import {
+  clearAuthCookie,
+  createAccessToken,
+  setAuthCookie,
+} from "../lib/tokens.js";
+import { requireAuth } from "../middleware/requireAuth.js";
 import { validateLoginBody, validateSignupBody } from "../lib/validation.js";
 
 export const authRouter = Router();
@@ -65,6 +71,9 @@ authRouter.post("/login", loginLimiter, async (request, response, next) => {
       return response.status(401).json({ error: "Invalid username or password." });
     }
 
+    const token = createAccessToken(user);
+    setAuthCookie(response, token);
+
     return response.status(200).json({
       user: {
         id: user.id,
@@ -74,4 +83,15 @@ authRouter.post("/login", loginLimiter, async (request, response, next) => {
   } catch (error) {
     return next(error);
   }
+});
+
+authRouter.get("/me", requireAuth, (request, response) => {
+  return response.status(200).json({
+    user: request.user,
+  });
+});
+
+authRouter.post("/logout", (_request, response) => {
+  clearAuthCookie(response);
+  return response.status(200).json({ ok: true });
 });

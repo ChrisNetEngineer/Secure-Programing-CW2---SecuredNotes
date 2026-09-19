@@ -7,5 +7,5 @@ On this page, a returning user:
 1. Enters their username
 2. Enters their password
 3. Clicks Sign in
-That is the authentication step. Sign in sends username and password to POST /api/auth/login. The backend looks up the user in PostgreSQL and checks the password hash. On success, the app stores the signed-in user for this tab and forwards them to /notes. If they do not have an account yet, Sign up sends them to /signup to create one.
+That is the authentication step. Sign in sends username and password to POST /api/auth/login. The backend looks up the user in PostgreSQL, checks the password hash, and issues a JWT in an httpOnly cookie. The app then forwards the user to /notes, which checks GET /api/auth/me. If they do not have an account yet, Sign up sends them to /signup to create one.
 

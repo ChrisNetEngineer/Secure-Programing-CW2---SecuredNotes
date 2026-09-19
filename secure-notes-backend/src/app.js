@@ -1,3 +1,4 @@
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import helmet from "helmet";
@@ -13,8 +14,10 @@ app.use(
   cors({
     origin: config.frontendOrigin,
     methods: ["GET", "POST"],
+    credentials: true,
   })
 );
+app.use(cookieParser());
 app.use(express.json({ limit: "16kb" }));
 
 app.use("/api/health", healthRouter);
