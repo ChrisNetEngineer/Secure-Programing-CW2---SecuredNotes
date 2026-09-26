@@ -1,6 +1,6 @@
 .notes-page {
   min-height: 100svh;
-  padding: 24px;
+  padding: 28px 24px 48px;
   color: #111827;
   color-scheme: light;
   background:
@@ -14,13 +14,22 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  max-width: 880px;
+  max-width: 920px;
   margin: 0 auto 24px;
+}
+
+.notes-kicker {
+  margin: 0 0 4px;
+  color: #6366f1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .notes-header h1 {
   margin: 0;
-  font-size: 28px;
+  font-size: 32px;
   letter-spacing: -0.04em;
 }
 
@@ -36,30 +45,31 @@
   font-size: 14px;
 }
 
-.notes-header-actions button {
-  padding: 8px 14px;
-  border: 1px solid #e5e7eb;
+.notes-header-actions button,
+.notes-form button {
+  padding: 10px 16px;
+  border: 0;
   border-radius: 10px;
-  background: #ffffff;
-  color: #374151;
   font: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
+.notes-header-actions button {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+}
+
 .notes-header-actions button:hover {
   border-color: #c7d2fe;
 }
 
-.notes-header-actions button:focus-visible {
-  outline: 2px solid #4f46e5;
-  outline-offset: 3px;
-}
-
-.notes-panel {
-  max-width: 880px;
-  margin: 0 auto;
+.notes-compose,
+.notes-list-panel {
+  max-width: 920px;
+  margin: 0 auto 20px;
   padding: 28px;
   border: 1px solid rgba(17, 24, 39, 0.06);
   border-radius: 24px;
@@ -69,14 +79,77 @@
     0 18px 50px rgba(79, 70, 229, 0.08);
 }
 
+.notes-compose h2,
 .notes-panel-heading h2 {
   margin: 0 0 6px;
   font-size: 22px;
 }
 
 .notes-panel-heading p {
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   color: #6b7280;
+}
+
+.notes-form {
+  display: grid;
+  gap: 10px;
+}
+
+.notes-form label {
+  margin-top: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.notes-form input,
+.notes-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #111827;
+  font: inherit;
+}
+
+.notes-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.notes-form input:focus,
+.notes-form textarea:focus {
+  outline: none;
+  background: #ffffff;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.16);
+}
+
+.notes-form button {
+  justify-self: start;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: #ffffff;
+}
+
+.notes-form button:disabled {
+  cursor: wait;
+  filter: saturate(0.7);
+}
+
+.notes-error,
+.notes-status {
+  margin: 0;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.notes-status {
+  max-width: 920px;
+  margin: 48px auto;
+  color: #6b7280;
+  text-align: center;
 }
 
 .notes-empty {
@@ -85,6 +158,83 @@
   border-radius: 16px;
   text-align: center;
   color: #6b7280;
+}
+
+.notes-list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note-card {
+  padding: 18px;
+  border: 1px solid #eef2ff;
+  border-radius: 16px;
+  background: #f8fafc;
+}
+
+.note-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.note-card h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.note-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 7px 12px 7px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.note-delete svg {
+  width: 15px;
+  height: 15px;
+}
+
+.note-delete:hover {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #e11d48;
+}
+
+.note-delete:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.note-delete:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.note-card p {
+  margin: 0 0 12px;
+  color: #4b5563;
+  white-space: pre-wrap;
+}
+
+.note-card time {
+  color: #9ca3af;
+  font-size: 12px;
 }
 
 @media (max-width: 640px) {

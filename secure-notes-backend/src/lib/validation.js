@@ -41,3 +41,62 @@ export function validateSignupBody(body) {
 
   return { username, password };
 }
+
+export function validateNoteBody(body) {
+  const title = typeof body?.title === "string" ? body.title.trim() : "";
+  const content = typeof body?.content === "string" ? body.content.trim() : "";
+
+  if (!title) {
+    return { error: "A title is required." };
+  }
+
+  if (title.length > 120) {
+    return { error: "Title must be 120 characters or fewer." };
+  }
+
+  if (content.length > 8000) {
+    return { error: "Note content must be 8000 characters or fewer." };
+  }
+
+  return { title, content };
+}
+
+const ROLES = new Set(["user", "admin"]);
+
+export function validateRoleBody(body) {
+  return validateRole(body?.role);
+}
+
+export function validateDisabledBody(body) {
+  if (typeof body?.disabled !== "boolean") {
+    return { error: "disabled must be true or false." };
+  }
+
+  return { disabled: body.disabled };
+}
+
+export function validateAdminCreateBody(body) {
+  const parsed = validateSignupBody(body);
+  if (parsed.error) {
+    return parsed;
+  }
+
+  const roleParsed = validateRole(body?.role ?? "user");
+  if (roleParsed.error) {
+    return roleParsed;
+  }
+
+  return {
+    username: parsed.username,
+    password: parsed.password,
+    role: roleParsed.role,
+  };
+}
+
+function validateRole(role) {
+  if (typeof role !== "string" || !ROLES.has(role)) {
+    return { error: "Role must be user or admin." };
+  }
+
+  return { role };
+}

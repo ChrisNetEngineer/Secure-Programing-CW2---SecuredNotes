@@ -8,6 +8,7 @@ export function createAccessToken(user) {
     {
       sub: String(user.id),
       username: user.username,
+      role: user.role,
     },
     config.jwtSecret,
     {

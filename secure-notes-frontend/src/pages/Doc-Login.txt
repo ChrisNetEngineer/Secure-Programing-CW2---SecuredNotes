@@ -9,3 +9,6 @@ On this page, a returning user:
 3. Clicks Sign in
 That is the authentication step. Sign in sends username and password to POST /api/auth/login. The backend looks up the user in PostgreSQL, checks the password hash, and issues a JWT in an httpOnly cookie. The app then forwards the user to /notes, which checks GET /api/auth/me. If they do not have an account yet, Sign up sends them to /signup to create one.
 
+To kill a node process manually:
+netstat -ano | findstr :3000
+taskkill /PID 3024 /F

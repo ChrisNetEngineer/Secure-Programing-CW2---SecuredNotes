@@ -12,7 +12,11 @@ export function getLoggedInUser() {
       return null;
     }
 
-    return user;
+    return {
+      id: user.id,
+      username: user.username,
+      role: user.role === "admin" ? "admin" : "user",
+    };
   } catch {
     return null;
   }
@@ -24,10 +28,15 @@ export function setLoggedInUser(user) {
     JSON.stringify({
       id: user.id,
       username: user.username,
+      role: user.role === "admin" ? "admin" : "user",
     })
   );
 }
 
 export function clearLoggedInUser() {
   sessionStorage.removeItem(STORAGE_KEY);
+}
+
+export function homePath(user) {
+  return user?.role === "admin" ? "/admin" : "/notes";
 }

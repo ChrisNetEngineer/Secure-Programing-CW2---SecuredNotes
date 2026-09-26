@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { api } from "../api";
-import { getLoggedInUser } from "../authSession";
+import { getLoggedInUser, homePath } from "../authSession";
 import "./Login.css";
 
 function Signup() {
@@ -14,8 +14,9 @@ function Signup() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  if (getLoggedInUser()) {
-    return <Navigate to="/notes" replace />;
+  const existingUser = getLoggedInUser();
+  if (existingUser) {
+    return <Navigate to={homePath(existingUser)} replace />;
   }
 
   async function handleSubmit(event) {

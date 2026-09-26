@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../api";
-import { getLoggedInUser, setLoggedInUser } from "../authSession";
+import { getLoggedInUser, homePath, setLoggedInUser } from "../authSession";
 import "./Login.css";
 
 function Login() {
@@ -14,8 +14,9 @@ function Login() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  if (getLoggedInUser()) {
-    return <Navigate to="/notes" replace />;
+  const existingUser = getLoggedInUser();
+  if (existingUser) {
+    return <Navigate to={homePath(existingUser)} replace />;
   }
 
   async function handleSubmit(event) {
@@ -37,7 +38,7 @@ function Login() {
       }
 
       setLoggedInUser(data.user);
-      navigate("/notes", { replace: true });
+      navigate(homePath(data.user), { replace: true });
     } catch {
       setError("Unable to reach the server.");
     } finally {

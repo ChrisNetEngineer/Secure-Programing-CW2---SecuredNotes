@@ -11,13 +11,14 @@ export async function requireAuth(request, response, next) {
     const payload = verifyAccessToken(token);
     const user = await findUserById(payload.sub);
 
-    if (!user) {
+    if (!user || user.disabled) {
       return response.status(401).json({ error: "Authentication required." });
     }
 
     request.user = {
       id: user.id,
       username: user.username,
+      role: user.role,
     };
 
     return next();
