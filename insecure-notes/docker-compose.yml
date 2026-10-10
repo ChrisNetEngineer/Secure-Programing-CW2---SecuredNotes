@@ -1,0 +1,46 @@
+name: insecure-notes
+
+services:
+  db:
+    image: postgres:16
+    container_name: insecure-notes-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: insecure_notes
+    volumes:
+      - insecure_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d insecure_notes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./insecure-notes-backend
+    container_name: insecure-notes-backend
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      FRONTEND_ORIGIN: http://localhost:5174
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/insecure_notes
+      JWT_SECRET: secret
+      JWT_EXPIRES_IN: 30d
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ./insecure-notes-frontend
+    container_name: insecure-notes-frontend
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+
+volumes:
+  insecure_pgdata:

@@ -1,0 +1,23 @@
+name: insecure-notes-database
+
+services:
+  db:
+    image: postgres:16
+    container_name: insecure-notes-database
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: insecure_notes
+    volumes:
+      - insecure_pgdata:/var/lib/postgresql/data
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d insecure_notes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  insecure_pgdata:

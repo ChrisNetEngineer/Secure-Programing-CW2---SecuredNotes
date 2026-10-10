@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import pg from "pg";
 import { config } from "./config.js";
 import {
@@ -13,8 +14,20 @@ const ADMIN_SEED_HASH =
 
 const USER_ADMIN_COLUMNS = "id, username, role, created_at, disabled";
 
+function postgresSsl() {
+  if (!config.pgSslRootCert) {
+    return undefined;
+  }
+
+  return {
+    rejectUnauthorized: true,
+    ca: fs.readFileSync(config.pgSslRootCert, "utf8"),
+  };
+}
+
 export const pool = new Pool({
   connectionString: config.databaseUrl,
+  ssl: postgresSsl(),
 });
 
 export async function findUserByUsername(username) {

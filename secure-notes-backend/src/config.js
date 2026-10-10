@@ -34,4 +34,7 @@ export const config = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1h",
   notesEncryptionKey: requiredAes256Key("NOTES_ENCRYPTION_KEY"),
   nodeEnv: process.env.NODE_ENV || "development",
+  tlsCertFile: process.env.TLS_CERT_FILE || "",
+  tlsKeyFile: process.env.TLS_KEY_FILE || "",
+  pgSslRootCert: process.env.PGSSLROOTCERT || "",
 };

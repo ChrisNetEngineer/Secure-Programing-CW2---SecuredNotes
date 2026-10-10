@@ -1,0 +1,81 @@
+name: secure-notes
+
+services:
+  certs:
+    build: ./certs
+    container_name: secure-notes-certs
+    volumes:
+      - tls_certs:/certs
+
+  db:
+    image: postgres:16
+    container_name: secure-notes-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: secure_notes
+    command:
+      - postgres
+      - -c
+      - ssl=on
+      - -c
+      - ssl_cert_file=/certs/db.crt
+      - -c
+      - ssl_key_file=/certs/db.key
+      - -c
+      - hba_file=/etc/postgresql/pg_hba.conf
+    volumes:
+      - secure_pgdata:/var/lib/postgresql/data
+      - ../secure-notes-database/sql:/docker-entrypoint-initdb.d
+      - tls_certs:/certs:ro
+      - ./postgres/pg_hba.conf:/etc/postgresql/pg_hba.conf:ro
+    depends_on:
+      certs:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d secure_notes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ../secure-notes-backend
+    container_name: secure-notes-backend
+    environment:
+      PORT: 3000
+      FRONTEND_ORIGIN: https://localhost:5173
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/secure_notes
+      BCRYPT_ROUNDS: 12
+      JWT_SECRET: 8e9a9c260c24d8aead77d1e29ed03627964010836aa60aa800290cdc7c9597b9
+      JWT_EXPIRES_IN: 1h
+      NOTES_ENCRYPTION_KEY: 29b3283b5699a60b24f8e9f00069f28eaa30ea90afdb84e157d78f2a35524302
+      NODE_ENV: production
+      TLS_CERT_FILE: /certs/backend.crt
+      TLS_KEY_FILE: /certs/backend.key
+      PGSSLROOTCERT: /certs/ca.crt
+    volumes:
+      - tls_certs:/certs:ro
+    depends_on:
+      certs:
+        condition: service_completed_successfully
+      db:
+        condition: service_healthy
+
+  frontend:
+    build: ../secure-notes-frontend
+    container_name: secure-notes-frontend
+    ports:
+      - "5173:443"
+    volumes:
+      - tls_certs:/etc/nginx/certs:ro
+    depends_on:
+      certs:
+        condition: service_completed_successfully
+      backend:
+        condition: service_started
+
+volumes:
+  secure_pgdata:
+  tls_certs:
